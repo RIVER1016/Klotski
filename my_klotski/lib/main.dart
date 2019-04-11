@@ -1,24 +1,119 @@
 import 'package:flutter/material.dart';
+import "logic.dart";
 
+final Map<int, Color> boxColors = <int, Color>{
+  2: Colors.orange[50],
+  4: Colors.orange[100],
+  8: Colors.orange[200],
+  16: Colors.orange[300],
+  32: Colors.orange[400],
+  64: Colors.orange[500],
+  128: Colors.orange[600],
+  256: Colors.orange[700],
+  512: Colors.orange[800],
+  1024: Colors.orange[900],
+};
 void main() {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Klotski",
       home: Scaffold(
-        body: HelloRectangle(),
+        body: GameWidget(),
       ),
     ),
   );
 }
 
-class HelloRectangle extends StatelessWidget {
+class BoardGridWidget extends StatelessWidget {
+  final _GameWidgetState _state;
+  BoardGridWidget(this._state);
   @override
   Widget build(BuildContext context) {
+    Size boardSize = _state.boardSize();
+    double width =
+        (boardSize.width - (_state.column + 1) * _state.cellPadding) /
+            _state.column;
+    List<CellBox> _backgroundBox = List<CellBox>();
+    int count = 0;
+    for (int r = 0; r < _state.row; ++r) {
+      for (int c = 0; c < _state.column; ++c) {
+        CellBox box = CellBox(
+          left: c * width + _state.cellPadding * (c + 1),
+          top: r * width + _state.cellPadding * (r + 1),
+          size: width,
+          color: Colors.grey[300],
+        );
+        _backgroundBox.add(box);
+        count++;
+      }
+    }
+    print(count);
+    return Positioned(
+        left: 0.0,
+        top: 0.0,
+        child: Container(
+          width: _state.boardSize().width,
+          height: _state.boardSize().height,
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          ),
+          child: Stack(
+            children: _backgroundBox,
+          ),
+        ));
+  }
+}
+
+class GameWidget extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _GameWidgetState();
+  }
+}
+
+class _GameWidgetState extends State<GameWidget> {
+  Game _game;
+  MediaQueryData _queryData;
+  final int row = 5;
+  final int column = 4;
+  final double cellPadding = 5.0;
+  final EdgeInsets _gameMargin = EdgeInsets.fromLTRB(20.0, 0.0, 20.0,20.0);
+  bool _isGameOver = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _game = Game(row, column);
+    newGame();
+  }
+
+  void newGame() {
+    _game.init();
+    _isGameOver = false;
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<CellWidget> _cellWidgets = List<CellWidget>();
+    int count = 0;
+    for (int r = 0; r < row; r++) {
+      for (int c = 0; c < column; c++) {
+        _cellWidgets.add(CellWidget(cell: _game.get(r, c), state: this));
+        count++;
+      }
+    }
+    print(count);
+    _queryData = MediaQuery.of(context);
+    List<Widget> children = List<Widget>();
+    children.add(BoardGridWidget(this));
+    children.addAll(_cellWidgets);
     return Column(
       children: <Widget>[
         Container(
-          margin: EdgeInsets.fromLTRB(0.0, 64.0, 0.0, 0.0),
+          margin: EdgeInsets.fromLTRB(0.0, 40.0, 0.0, 0.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -60,351 +155,127 @@ class HelloRectangle extends StatelessWidget {
                     child: Center(
                       child: Text("新游戏"),
                     )),
-                onPressed: () {
-                },
+                onPressed: () {},
               ),
             ],
           ),
         ),
         Container(
-          child: Center(
-              child: Container(
-            height: 400.0,
-            width: 290.0,
-            decoration: new BoxDecoration(
-              border: new Border.all(width: 4.0, color: Colors.black),
-              color: Colors.greenAccent,
+          height: 50.0,
+          child: Opacity(
+            opacity: _isGameOver ? 1.0 : 0.0,
+            child: Center(
+              child: Text("Game Over!",
+                  style: TextStyle(
+                    fontSize: 24.0,
+                  )),
             ),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                    Container(
-                        height: 70,
-                        width: 70,
-                        decoration: new BoxDecoration(
-                          border: new Border.all(width: 4.0, color: Colors.red),
-                          color: Colors.grey,
-                          borderRadius: new BorderRadius.all(
-                              new Radius.circular(20.0)), //圆角
-                        ),
-                        child: Text("兵",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                              color: Colors.purple,
-                              fontSize: 40.0,
-                            ))),
-                  ],
-                ),
-              ],
-            ),
-          )),
+          ),
         ),
+        Container(
+            margin: _gameMargin,
+            width: _queryData.size.width,
+            height: (_queryData.size.width- _gameMargin.left - _gameMargin.right)*row/column,
+            child: GestureDetector(
+              child: Stack(
+                children: children,
+              ),
+            )),
       ],
     );
   }
-}=
+
+  Size boardSize() {
+    assert(_queryData != null);
+    Size size = _queryData.size;
+    num width = size.width - _gameMargin.left - _gameMargin.right;
+    num height = size.height - _gameMargin.left - _gameMargin.right;
+    return Size(width, height);
+  }
+}
+
+class AnimatedCellWidget extends AnimatedWidget {
+  final BoardCell cell;
+  final _GameWidgetState state;
+  AnimatedCellWidget(
+      {Key key, this.cell, this.state, Animation<double> animation})
+      : super(key: key, listenable: animation);
+
+  @override
+  Widget build(BuildContext context) {
+    final Animation<double> animation = listenable;
+    double animationValue = animation.value;
+    Size boardSize = state.boardSize();
+    double width = (boardSize.width - (state.column + 1) * state.cellPadding) /
+        state.column;
+    if (cell.number == 0) {
+      return Container();
+    } else {
+      return CellBox(
+        left: (cell.column * width + state.cellPadding * (cell.column + 1)) +
+            width / 2 * (1 - animationValue),
+        top: cell.row * width +
+            state.cellPadding * (cell.row + 1) +
+            width / 2 * (1 - animationValue),
+        size: width * animationValue,
+        color: boxColors.containsKey(cell.number)
+            ? boxColors[cell.number]
+            : boxColors[boxColors.keys.last],
+        text: Text(
+          cell.number.toString(),
+          style: TextStyle(
+            fontSize: 30.0 * animationValue,
+            fontWeight: FontWeight.bold,
+            color: cell.number < 32 ? Colors.grey[600] : Colors.grey[50],
+          ),
+        ),
+      );
+    }
+  }
+}
+
+class CellWidget extends StatefulWidget {
+  final BoardCell cell;
+  final _GameWidgetState state;
+  CellWidget({this.cell, this.state});
+  _CellWidgetState createState() => _CellWidgetState();
+}
+
+class _CellWidgetState extends State<CellWidget>
+    with SingleTickerProviderStateMixin {
+  AnimationController controller;
+  Animation<double> animation;
+
+  @override
+  initState() {
+    super.initState();
+    controller = AnimationController(
+      duration: Duration(
+        milliseconds: 200,
+      ),
+      vsync: this,
+    );
+    animation = new Tween(begin: 0.0, end: 1.0).animate(controller);
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.cell.isNew && !widget.cell.isEmpty()) {
+      controller.reset();
+      controller.forward();
+      widget.cell.isNew = false;
+    } else {
+      controller.animateTo(1.0);
+    }
+    return AnimatedCellWidget(
+      cell: widget.cell,
+      state: widget.state,
+      animation: animation,
+    );
+  }
+}
+
 class CellBox extends StatelessWidget {
   final double left;
   final double top;
