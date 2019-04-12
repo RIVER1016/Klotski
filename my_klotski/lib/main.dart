@@ -42,7 +42,13 @@ class BoardGridWidget extends StatelessWidget {
           left: c * width + _state.cellPadding * (c + 1),
           top: r * width + _state.cellPadding * (r + 1),
           size: width,
-          color: Colors.grey[300],
+          color: Colors.yellow[300],
+          text: Text(
+            "兵",
+            style: new TextStyle(
+              fontSize:40
+            ),
+          ),
         );
         _backgroundBox.add(box);
         count++;
