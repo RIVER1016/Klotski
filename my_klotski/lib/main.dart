@@ -35,26 +35,192 @@ class BoardGridWidget extends StatelessWidget {
         (boardSize.width - (_state.column + 1) * _state.cellPadding) /
             _state.column;
     List<CellBox> _backgroundBox = List<CellBox>();
-    int count = 0;
-    for (int r = 0; r < _state.row; ++r) {
-      for (int c = 0; c < _state.column; ++c) {
-        CellBox box = CellBox(
-          left: c * width + _state.cellPadding * (c + 1),
-          top: r * width + _state.cellPadding * (r + 1),
-          size: width,
-          color: Colors.yellow[300],
-          text: Text(
-            "兵",
-            style: new TextStyle(
-              fontSize:40
-            ),
-          ),
-        );
-        _backgroundBox.add(box);
-        count++;
-      }
-    }
-    print(count);
+    CellBox horizontalBox = CellBox(
+      width: 2*width,
+      height: width,
+      color: Colors.green[300],
+      text: Text(
+          "关羽",
+        style: new TextStyle(
+            fontSize:40
+        ),
+      ),
+    );
+    CellBox verticalBox_1 =CellBox(
+      width: width,
+      height: 2*width,
+      color: Colors.blue[300],
+      text: Text(
+        "马超",
+        style: new TextStyle(
+            fontSize:40
+        ),
+      ),
+    );
+    CellBox verticalBox_2 =CellBox(
+      width: width,
+      height: 2*width,
+      color: Colors.blue[300],
+      text: Text(
+        "张飞",
+        style: new TextStyle(
+            fontSize:40
+        ),
+      ),
+    );
+    CellBox verticalBox_3 =CellBox(
+      width: width,
+      height: 2*width,
+      color: Colors.blue[300],
+      text: Text(
+        "黄忠",
+        style: new TextStyle(
+            fontSize:40
+        ),
+      ),
+    );
+    CellBox verticalBox_4 =CellBox(
+      width: width,
+      height: 2*width,
+      color: Colors.blue[300],
+      text: Text(
+        "赵云",
+        style: new TextStyle(
+            fontSize:40
+        ),
+      ),
+    );
+    CellBox leadBox=CellBox(
+      width: 2*width,
+      height: 2*width,
+      color: Colors.red[400],
+      text: Text(
+        "曹操",
+        style: new TextStyle(
+            fontSize:40
+        ),
+      ),
+    );
+    CellBox blankBox_1=CellBox(
+      width: width,
+      height: width,
+      color: Colors.grey,
+    );
+    CellBox blankBox_2=CellBox(
+      width: width,
+      height: width,
+      color: Colors.grey ,
+    );
+    CellBox box_1 = CellBox(
+      width: width,
+      height: width,
+      color: Colors.yellow[300],
+      text: Text(
+        "兵",
+        style: new TextStyle(
+            fontSize:40
+        ),
+      ),
+    );
+    CellBox box_2 = CellBox(
+      width: width,
+      height: width,
+      color: Colors.yellow[300],
+      text: Text(
+        "兵",
+        style: new TextStyle(
+            fontSize:40
+        ),
+      ),
+    );
+    CellBox box_3 = CellBox(
+      width: width,
+      height: width,
+      color: Colors.yellow[300],
+      text: Text(
+        "兵",
+        style: new TextStyle(
+            fontSize:40
+        ),
+      ),
+    );
+    CellBox box_4 = CellBox(
+      width: width,
+      height: width,
+      color: Colors.yellow[300],
+      text: Text(
+        "兵",
+        style: new TextStyle(
+            fontSize:40
+        ),
+      ),
+    );
+
+//      c * width + _state.cellPadding * (c + 1)
+//      r * width + _state.cellPadding * (r + 1)
+    double left = 0 * width + _state.cellPadding * (0+ 1);
+    double top = 0 * width + _state.cellPadding * (0 + 1);
+    verticalBox_1.setLeftAndTop(left,top);
+
+    left = 1 * width + _state.cellPadding * (1+ 1);
+    top = 0 * width + _state.cellPadding * (0 + 1);
+    leadBox.setLeftAndTop(left,top);
+
+    left = 3 * width + _state.cellPadding * (3+ 1);
+    top = 0 * width + _state.cellPadding * (0 + 1);
+    verticalBox_2.setLeftAndTop(left,top);
+
+    left = 0 * width + _state.cellPadding * (0+ 1);
+    top = 2 * width + _state.cellPadding * (2 + 1);
+    verticalBox_3.setLeftAndTop(left,top);
+
+    left = 1 * width + _state.cellPadding * (1+ 1);
+    top = 2 * width + _state.cellPadding * (2 + 1);
+    horizontalBox.setLeftAndTop(left,top);
+
+    left = 1 * width + _state.cellPadding * (1+ 1);
+    top = 3 * width + _state.cellPadding * (3 + 1);
+    box_1.setLeftAndTop(left,top);
+
+    left = 2 * width + _state.cellPadding * (2+ 1);
+    top = 3 * width + _state.cellPadding * (3 + 1);
+    box_2.setLeftAndTop(left,top);
+
+    left = 3 * width + _state.cellPadding *(3 + 1);
+    top = 2 * width + _state.cellPadding * (2 + 1);
+    verticalBox_4.setLeftAndTop(left,top);
+
+    left = 0 * width + _state.cellPadding * (0+ 1);
+    top = 4 * width + _state.cellPadding * (4 + 1);
+    box_3.setLeftAndTop(left,top);
+
+    left = 1 * width + _state.cellPadding * (1+ 1);
+    top = 4 * width + _state.cellPadding * (4 + 1);
+    blankBox_1.setLeftAndTop(left,top);
+
+    left = 2 * width + _state.cellPadding * (2+ 1);
+    top = 4 * width + _state.cellPadding * (4 + 1);
+    blankBox_2.setLeftAndTop(left,top);
+
+    left = 3 * width + _state.cellPadding * (3+ 1);
+    top = 4 * width + _state.cellPadding * (4+ 1);
+    box_4.setLeftAndTop(left,top);
+
+    _backgroundBox.add(verticalBox_1);
+    _backgroundBox.add(verticalBox_2);
+    _backgroundBox.add(verticalBox_3);
+    _backgroundBox.add(verticalBox_4);
+    _backgroundBox.add(blankBox_1);
+    _backgroundBox.add(blankBox_2);
+    _backgroundBox.add(leadBox);
+    _backgroundBox.add(horizontalBox);
+    _backgroundBox.add(box_1);
+    _backgroundBox.add(box_2);
+    _backgroundBox.add(box_3);
+    _backgroundBox.add(box_4);
+
+
+
     return Positioned(
         left: 0.0,
         top: 0.0,
@@ -223,7 +389,8 @@ class AnimatedCellWidget extends AnimatedWidget {
         top: cell.row * width +
             state.cellPadding * (cell.row + 1) +
             width / 2 * (1 - animationValue),
-        size: width * animationValue,
+        width: width * animationValue,
+        height: width * animationValue,
         color: boxColors.containsKey(cell.number)
             ? boxColors[cell.number]
             : boxColors[boxColors.keys.last],
@@ -283,12 +450,18 @@ class _CellWidgetState extends State<CellWidget>
 }
 
 class CellBox extends StatelessWidget {
-  final double left;
-  final double top;
-  final double size;
+  double left;
+  double top;
+  final double width;
+  final double height;
   final Color color;
   final Text text;
-  CellBox({this.left, this.top, this.size, this.color, this.text});
+  CellBox({this.left, this.top, this.width,this.height,this.color, this.text});
+
+  void setLeftAndTop(double left,double top){
+    this.left=left;
+    this.top=top;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -296,8 +469,8 @@ class CellBox extends StatelessWidget {
       left: left,
       top: top,
       child: Container(
-          width: size,
-          height: size,
+          width: width,
+          height: height,
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.all(Radius.circular(8.0)),
