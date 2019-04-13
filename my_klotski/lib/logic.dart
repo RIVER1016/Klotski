@@ -24,6 +24,9 @@ void init(){
   BoardCell get(int r, int c) {
     return _boardCells[r][c];
   }
+  void addCount(){
+    this.stepCount+=1;
+  }
 }
 
 class BoardCell {
