@@ -9,7 +9,7 @@ Classical Chinese Puzzles
 - 1X2、2X1、2X2格子由多个小widget组成，
 - 为了方便widget的逻辑移动，我在本身棋盘的外围加了一层名为-1的小widget
 <img src="https://user-images.githubusercontent.com/37433487/59200512-0204c600-8bcb-11e9-87c7-ef405f9e8374.gif" width="200px"  />
- 
+演示视频地址:https://www.dropbox.com/s/rzj4xik1218j1wd/short_1.mp4?dl=0
 
 ### UE Design：
 
